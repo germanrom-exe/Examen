@@ -1,1 +1,188 @@
-g
+package PARCIAL;
+
+import java.util.ArrayList;
+import java.util.Scanner;
+
+class Persona {
+    private String nombre, apellido;
+    private int dni;
+
+    public Persona(String nombre, String apellido, int dni) {
+        this.nombre = nombre;
+        this.apellido = apellido;
+        this.dni = dni;
+    }
+
+    @Override
+    public String toString() {
+        return "- " + this.apellido + ", " + this.nombre + " (DNI: " + this.dni + ")";
+    }
+}
+
+class Estudiantes extends Persona {
+    private String carrera;
+
+    public Estudiantes(String nombre, String apellido, int dni, String carrera) {
+        super(nombre, apellido, dni);
+        this.carrera = carrera;
+    }
+
+    public Estudiantes(String nombre, String apellido, int dni) {
+        super(nombre, apellido, dni);
+        this.carrera = "Sin definir";
+    }
+
+    public void modificarCarrera(String nuevaCarrera) {
+        this.carrera = nuevaCarrera;
+    }
+
+    @Override
+    public String toString() {
+        return super.toString() + " - Carrera: " + this.carrera;
+    }
+}
+
+class Materia {
+    private String nombre;
+
+    public Materia(String nombre) {
+        this.nombre = nombre;
+    }
+
+    @Override
+    public String toString() {
+        return "- " + this.nombre;
+    }
+}
+
+class Docentes extends Persona implements InformeDeDatos {
+    private Materia[] materias;
+
+    public Docentes(String nombre, String apellido, int dni, Materia[] materias) {
+        super(nombre, apellido, dni);
+        this.materias = materias;
+    }
+
+    @Override
+    public String informe() {
+        return "El docente " + super.toString() + " dicta materias:";
+    }
+
+    public void mostrarMaterias() {
+        for (Materia materia : materias) {
+            System.out.println(materia.toString());
+        }
+    }
+
+    @Override
+    public String toString() {
+        return super.toString();
+    }
+}
+
+interface InformeDeDatos {
+    public String informe();
+}
+
+public class prueba3 {
+
+    private static ArrayList<Estudiantes> estudiantes = new ArrayList<>();
+    private static ArrayList<Docentes> docentes = new ArrayList<>();
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int opcion;
+
+        do {
+            System.out.println("\n===== MENÚ PRINCIPAL =====");
+            System.out.println("1. Registrar estudiante");
+            System.out.println("2. Registrar docente");
+            System.out.println("3. Mostrar informes");
+            System.out.println("4. Salir");
+            System.out.print("Seleccione una opción: ");
+            opcion = sc.nextInt();
+            sc.nextLine();
+
+            switch (opcion) {
+                case 1:
+                    registrarEstudiante(sc);
+                    break;
+                case 2:
+                    registrarDocente(sc);
+                    break;
+                case 3:
+                    mostrarInformes();
+                    break;
+                case 4:
+                    System.out.println("¡Saliendo del programa!");
+                    break;
+                default:
+                    System.out.println("Opción inválida.");
+            }
+        } while (opcion != 4);
+
+        sc.close();
+    }
+
+    public static void registrarEstudiante(Scanner sc) {
+        System.out.print("Nombre: ");
+        String nombre = sc.nextLine();
+        System.out.print("Apellido: ");
+        String apellido = sc.nextLine();
+        System.out.print("DNI: ");
+        int dni = sc.nextInt();
+        sc.nextLine();
+        System.out.print("Carrera: ");
+        String carrera = sc.nextLine();
+
+        Estudiantes e = new Estudiantes(nombre, apellido, dni, carrera);
+        estudiantes.add(e);
+        System.out.println("Estudiante registrado correctamente.");
+    }
+
+    public static void registrarDocente(Scanner sc) {
+        System.out.print("Nombre: ");
+        String nombre = sc.nextLine();
+        System.out.print("Apellido: ");
+        String apellido = sc.nextLine();
+        System.out.print("DNI: ");
+        int dni = sc.nextInt();
+        sc.nextLine();
+
+        System.out.print("¿Cuántas materias dicta?: ");
+        int cant = sc.nextInt();
+        sc.nextLine();
+
+        Materia[] materias = new Materia[cant];
+        for (int i = 0; i < cant; i++) {
+            System.out.print("Nombre de la materia " + (i + 1) + ": ");
+            String nombreMateria = sc.nextLine();
+            materias[i] = new Materia(nombreMateria);
+        }
+
+        Docentes d = new Docentes(nombre, apellido, dni, materias);
+        docentes.add(d);
+        System.out.println("Docente registrado correctamente.");
+    }
+
+    public static void mostrarInformes() {
+        System.out.println("\n--- LISTA DE ESTUDIANTES ---");
+        if (estudiantes.isEmpty()) {
+            System.out.println("No hay estudiantes registrados.");
+        } else {
+            for (Estudiantes e : estudiantes) {
+                System.out.println(e.toString());
+            }
+        }
+
+        System.out.println("\n--- LISTA DE DOCENTES ---");
+        if (docentes.isEmpty()) {
+            System.out.println("No hay docentes registrados.");
+        } else {
+            for (Docentes d : docentes) {
+                System.out.println(d.informe());
+                d.mostrarMaterias();
+            }
+        }
+    }
+}
