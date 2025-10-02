@@ -1,0 +1,117 @@
+package PARCIAL;
+
+public class prueba2 {
+
+    class Persona {
+        private String nombre, apellido;
+        private int dni;
+
+        public Persona(String nombre, String apellido, int dni) {
+            this.nombre = nombre;
+            this.apellido = apellido;
+            this.dni = dni;
+        }
+
+        @Override
+        public String toString() {
+            return "- " + this.apellido + ", " + this.nombre + " (DNI: " + this.dni + ")";
+        }
+    }
+
+    class Estudiantes extends Persona {
+        private String carrera;
+
+        public Estudiantes(String nombre, String apellido, int dni, String carrera) {
+            super(nombre, apellido, dni);
+            this.carrera = carrera;
+        }
+
+        public Estudiantes(String nombre, String apellido, int dni) {
+            super(nombre, apellido, dni);
+            this.carrera = "Sin definir";
+        }
+
+        public void modificarCarrera(String nuevaCarrera) {
+            this.carrera = nuevaCarrera;
+        }
+
+        @Override
+        public String toString() {
+            return super.toString() + " - Carrera: " + this.carrera;
+        }
+    }
+
+    class Materia {
+        private String nombre;
+
+        public Materia(String nombre) {
+            this.nombre = nombre;
+        }
+
+        public String toString() {
+            return "- " + this.nombre;
+        }
+    }
+
+    class Docentes extends Persona implements InformeDeDatos {
+        private Materia[] materias;
+
+        public Docentes(String nombre, String apellido, int dni, Materia[] materias) {
+            super(nombre, apellido, dni);
+            this.materias = materias;
+        }
+
+        @Override
+        public String informe() {
+            return "El docente " + super.toString() + " dicta materias:";
+        }
+
+        public void mostrarMaterias() {
+            for (Materia materia : materias) {
+                System.out.println(materia.toString());
+            }
+        }
+
+        @Override // polimorfismo -> sobreescritura
+        public String toString() {
+            return super.toString();
+        }
+    }
+
+    interface InformeDeDatos {
+        public String informe();
+    }
+
+    public static class Practica06 {
+
+    public static void mostrarEstudiantes(Estudiantes[] estudiantes) {
+        for (Estudiantes est : estudiantes) {
+            if (est != null) {
+                System.out.println(est.toString());
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+
+    prueba2 p = new prueba2();
+    Estudiantes e1 = p.new Estudiantes("María", "Gómez", 87654321, "ISI");
+    Estudiantes e2 = p.new Estudiantes("Juan", "Pérez", 12345678, "TUP");
+    Estudiantes e3 = null;
+
+    Estudiantes[] lista = { e1, e2, e3 };
+
+    System.out.println("Listado de estudiantes:");
+    mostrarEstudiantes(lista);
+
+    Materia isi = p.new Materia("ISI");
+    Materia tup = p.new Materia("TUP");
+    Materia[] materias = { isi, tup };
+    Docentes docente = p.new Docentes("Facundo", "Uferer", 11222333, materias);
+
+    System.out.println("\nDocente:");
+    System.out.println(docente.toString());
+    docente.mostrarMaterias();
+        }
+    }
+}
